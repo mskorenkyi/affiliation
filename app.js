@@ -1,4 +1,3 @@
-
 var graph = {
 		"nodes": [
 			{
@@ -345,15 +344,6 @@ simulation
 	.nodes(graph.nodes)
 	.on("tick", ticked);
 
-
-var _f = d3.forceCollide();
-_f.radius(40)
-	.strength(1)
-	.iterations(10)
-	.initialize(graph.nodes);
-
-_f();
-
 simulation.force("link")
 	.distance(function () {
 		return 100;
@@ -372,6 +362,14 @@ function ticked() {
 		.attr("transform", function (d) {
 			return 'translate(' + d.x + ',' + d.y + ')'
 		});
+
+	var _f = d3.forceCollide();
+	_f.radius(60)
+		.strength(1)
+		.iterations(10)
+		.initialize(graph.nodes);
+
+	_f();
 }
 
 function addImage(id,url) {
@@ -409,4 +407,3 @@ function onChangeSelectedNode() {
 	}
 	container.innerHTML = html;
 }
-
