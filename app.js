@@ -265,7 +265,17 @@ var link = svg.append("g")
 	.data(graph.links)
 	.enter()
 	.append('g').append("line")
-	.attr("stroke-width", 1);
+	.attr("stroke-width", 3)
+	.attr("marker-end", "url(#arrow-end)")
+	.attr("marker-start", "url(#arrow-start)")
+    .on("mouseover", function (e) {
+        // console.log(e);
+    })
+    .on("mouseout", function (e) {
+        // console.log(e);
+    });
+
+
 
 var cont = svg.append("g")
 	.attr("class", "nodes");
@@ -299,6 +309,32 @@ var node = cont
 		onChangeSelectedNode();
 		d3.select(this).classed("selected", d.selected);
 	});
+
+svg.append("defs")
+    .append("marker")
+        .attr("id","arrow-end")
+        .attr("viewBox","0 -5 10 10")
+        .attr("refX",27)
+        .attr("refY",0)
+        .attr("markerWidth",4)
+        .attr("markerHeight",4)
+        .attr("orient","auto")
+    .append("path")
+        .attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
+        .attr("class","arrowFooter");
+
+svg.append("defs")
+    .append("marker")
+        .attr("id","arrow-start")
+        .attr("viewBox","0 -5 10 10")
+        .attr("refX",-17)
+        .attr("refY",0)
+        .attr("markerWidth",4)
+        .attr("markerHeight",4)
+        .attr("orient","auto")
+    .append("path")
+        .attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
+        .attr("class","arrowHead");
 
 node.append("circle")
 	.attr('class','wrapper')
