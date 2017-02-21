@@ -1,0 +1,87 @@
+{
+  "nodes": [
+
+    {
+      "id": "Blacheville",
+      "type": 0,
+      "name": "User Blacheville",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "Tholomyes",
+      "type": 0,
+      "name": "User Tholomyes",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "Valjean",
+      "type": 0,
+      "name": "User Valjean",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "Champtercier",
+      "type": 1,
+      "name": "Champtercier hospital",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "Isabeau",
+      "type": 0,
+      "name": "User Isabeau",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "Zephine",
+      "type": 0,
+      "name": "User Zephine",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "OldMan",
+      "type": 0,
+      "name": "User OldMan",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    },
+    {
+      "id": "Gervais",
+      "type": 0,
+      "name": "User Gervais",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    }
+  ],
+  "links": [
+    {"source": "Champtercier", "target": "CountessdeLo"},
+    {"source": "Isabeau", "target": "Champtercier"},
+    {"source": "Zephine", "target": "Champtercier"},
+    {"source": "OldMan", "target": "Champtercier"},
+    {"source": "Gervais", "target": "Champtercier"},
+    {"source": "Valjean", "target": "Champtercier"},
+    {"source": "Tholomyes", "target": "Valjean"},
+    {"source": "CountessdeLo", "target": "Blacheville"}
+  ]
+}

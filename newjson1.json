@@ -1,0 +1,16 @@
+{
+  "nodes": [
+    {
+      "id": "Cravatte",
+      "type": 0,
+      "name": "User Cravatte",
+      "age": "23",
+      "phone": "(555)777-77-77",
+      "email": "example@email.com",
+      "avatar": ""
+    }
+  ],
+  "links": [
+    {"source": "Cravatte", "target": "Mme.deR"},
+  ]
+}

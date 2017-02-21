@@ -1,3 +1,91 @@
+var newData = {
+	"nodes": [
+
+		{
+			"id": "Blacheville",
+			"type": 0,
+			"name": "User Blacheville",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "Tholomyes",
+			"type": 0,
+			"name": "User Tholomyes",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "Valjean",
+			"type": 0,
+			"name": "User Valjean",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "Champtercier",
+			"type": 1,
+			"name": "Champtercier hospital",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "Isabeau",
+			"type": 0,
+			"name": "User Isabeau",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "Zephine",
+			"type": 0,
+			"name": "User Zephine",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "OldMan",
+			"type": 0,
+			"name": "User OldMan",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		},
+		{
+			"id": "Gervais",
+			"type": 0,
+			"name": "User Gervais",
+			"age": "23",
+			"phone": "(555)777-77-77",
+			"email": "example@email.com",
+			"avatar": ""
+		}
+	],
+	"links": [
+		{"source": "Champtercier", "target": "CountessdeLo"},
+		{"source": "Isabeau", "target": "Champtercier"},
+		{"source": "Zephine", "target": "Champtercier"},
+		{"source": "OldMan", "target": "Champtercier"},
+		{"source": "Gervais", "target": "Champtercier"},
+		{"source": "Valjean", "target": "Champtercier"},
+		{"source": "Tholomyes", "target": "Valjean"},
+		{"source": "CountessdeLo", "target": "Blacheville"}
+	]
+};
+
 var graph = {
 		"nodes": [
 			{
@@ -42,21 +130,13 @@ var graph = {
 				"age": "23",
 				"phone": "(555)777-77-77",
 				"email": "example@email.com",
-				"avatar": ""
+				"avatar": "",
+				"hasChildren": true
 			},
 			{
 				"id": "Geborand",
 				"type": 0,
 				"name": "User Geborand",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
-				"id": "Champtercier",
-				"type": 1,
-				"name": "Champtercier hospital",
 				"age": "23",
 				"phone": "(555)777-77-77",
 				"email": "example@email.com",
@@ -81,27 +161,9 @@ var graph = {
 				"avatar": ""
 			},
 			{
-				"id": "OldMan",
-				"type": 0,
-				"name": "User OldMan",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
 				"id": "Labarre",
 				"type": 0,
 				"name": "User Labarre",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
-				"id": "Valjean",
-				"type": 0,
-				"name": "User Valjean",
 				"age": "23",
 				"phone": "(555)777-77-77",
 				"email": "example@email.com",
@@ -126,33 +188,6 @@ var graph = {
 				"avatar": ""
 			},
 			{
-				"id": "Isabeau",
-				"type": 0,
-				"name": "User Isabeau",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
-				"id": "Gervais",
-				"type": 0,
-				"name": "User Gervais",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
-				"id": "Tholomyes",
-				"type": 0,
-				"name": "User Tholomyes",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
 				"id": "Listolier",
 				"type": 0,
 				"name": "User Listolier",
@@ -165,15 +200,6 @@ var graph = {
 				"id": "Fameuil",
 				"type": 0,
 				"name": "User Fameuil",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
-			},
-			{
-				"id": "Blacheville",
-				"type": 0,
-				"name": "User Blacheville",
 				"age": "23",
 				"phone": "(555)777-77-77",
 				"email": "example@email.com",
@@ -196,15 +222,6 @@ var graph = {
 				"phone": "(555)777-77-77",
 				"email": "example@email.com",
 				"avatar": ""
-			},
-			{
-				"id": "Zephine",
-				"type": 0,
-				"name": "User Zephine",
-				"age": "23",
-				"phone": "(555)777-77-77",
-				"email": "example@email.com",
-				"avatar": ""
 			}
 		],
 		"links": [
@@ -213,15 +230,7 @@ var graph = {
 			{"source": "Mme.Magloire", "target": "Myriel"},
 			{"source": "Mme.Magloire", "target": "Mlle.Baptistine"},
 			{"source": "CountessdeLo", "target": "Myriel"},
-			{"source": "CountessdeLo", "target": "Blacheville"},
 			{"source": "Geborand", "target": "Myriel"},
-			{"source": "Champtercier", "target": "CountessdeLo"},
-			{"source": "Isabeau", "target": "Champtercier"},
-			{"source": "Zephine", "target": "Champtercier"},
-			{"source": "OldMan", "target": "Champtercier"},
-			{"source": "Gervais", "target": "Champtercier"},
-			{"source": "Valjean", "target": "Champtercier"},
-			{"source": "Tholomyes", "target": "Valjean"},
 			{"source": "Dahlia", "target": "Count"},
 			{"source": "Count", "target": "Mme.deR"},
 			{"source": "Cravatte", "target": "Mme.deR"},
@@ -236,7 +245,7 @@ var graph = {
 	defaultUser = 'https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png',
 	defaultHospital = 'https://cdn2.iconfinder.com/data/icons/medicine-9/512/hospital-512.png',
 	width = document.body.clientWidth,
-	height = 600;
+	height = 800;
 
 var svg = d3.select("svg")
 		.attr("width", width)
@@ -253,129 +262,170 @@ d3.select('#affiliation')
 
 addImage('user', defaultUser);
 addImage('hospital', defaultHospital);
+defs
+	.append("marker")
+	.attr("id", "arrow-end")
+	.attr("viewBox", "0 -5 10 10")
+	.attr("refX", 27)
+	.attr("refY", 0)
+	.attr("markerWidth", 4)
+	.attr("markerHeight", 4)
+	.attr("orient", "auto")
+	.append("path")
+	.attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
+	.attr("class", "arrowFooter");
+
+defs
+	.append("marker")
+	.attr("id", "arrow-start")
+	.attr("viewBox", "0 -5 10 10")
+	.attr("refX", -17)
+	.attr("refY", 0)
+	.attr("markerWidth", 4)
+	.attr("markerHeight", 4)
+	.attr("orient", "auto")
+	.append("path")
+	.attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
+	.attr("class", "arrowHead");
 
 var simulation = d3.forceSimulation()
 	.force("link", d3.forceLink().id(function(d) { return d.id; }))
 	.force("charge", d3.forceManyBody())
 	.force("center", d3.forceCenter(width / 2, height / 2));
 
-var link = svg.append("g")
-	.attr("class", "links")
-	.selectAll("line")
-	.data(graph.links)
-	.enter()
-	.append('g').append("line")
-	.attr("stroke-width", 3)
-	.attr("marker-end", "url(#arrow-end)")
-	.attr("marker-start", "url(#arrow-start)")
-    .on("mouseover", function (e) {
-        // console.log(e);
-    })
-    .on("mouseout", function (e) {
-        // console.log(e);
-    });
+var _f;
 
+var linksContainer = svg.append("g")
+	.attr("class", "links");
 
+var link;
+drawLinks();
 
-var cont = svg.append("g")
-	.attr("class", "nodes");
+function drawLinks() {
+	linksContainer
+		.selectAll(".link-item")
+		.data(graph.links)
+		.enter()
+		.append('g')
+		.attr('class','link-item')
+		.append("line")
+		.attr("stroke-width", 3)
+		.attr("marker-end", "url(#arrow-end)")
+		.attr("marker-start", "url(#arrow-start)")
+		.on("mouseover", function (e) {
+			// console.log(e);
+		})
+		.on("mouseout", function (e) {
+			// console.log(e);
+		});;
 
-var node = cont
-	.selectAll("circle")
-	.data(graph.nodes)
-	.enter().append('g')
-	.on('mouseover', function () {
-		event.currentTarget.parentElement.append(event.currentTarget)
-	})
-	.on('click', function (d) {
-		if (d3.event.defaultPrevented) return;
-		var state = d.selected;
-		var _selected = [];
-		if (!shiftKey) {
-			node.classed("selected", function(p) { return p.selected = false; })
-		}
+	link = linksContainer.selectAll("line");
+}
 
-		d.selected = !state;
-		node.each(function (_d) {
-			if (_d.selected) {
-				_selected.push(_d);
+var nodesContainer = svg.append("g")
+		.attr("class", "nodes"),
+	node;
+
+drawNodes();
+
+function drawNodes() {
+	var item = nodesContainer
+		.selectAll(".node-item")
+		.data(graph.nodes)
+		.enter().append('g')
+		.attr('class','node-item')
+		/*.on('mouseover', function () {
+			event.currentTarget.parentElement.append(event.currentTarget)
+		})*/
+		.on('click', function (d) {
+			if (d3.event.defaultPrevented) return;
+			var state = d.selected;
+			var _selected = [];
+			if (!shiftKey) {
+				node.classed("selected", function(p) { return p.selected = false; })
 			}
+
+			d.selected = !state;
+			node.each(function (_d) {
+				if (_d.selected) {
+					_selected.push(_d);
+				}
+			});
+			if (_selected.length === 1) {
+				selected = _selected[0];
+			} else {
+				selected = null;
+			}
+			onChangeSelectedNode();
+			d3.select(this).classed("selected", d.selected);
+			/*if (d.hasChildren) {
+				d.hasChildren = false;
+				loadMore();
+			}*/
 		});
-		if (_selected.length === 1) {
-			selected = _selected[0];
-		} else {
-			selected = null;
-		}
-		onChangeSelectedNode();
-		d3.select(this).classed("selected", d.selected);
-	});
 
-svg.append("defs")
-    .append("marker")
-        .attr("id","arrow-end")
-        .attr("viewBox","0 -5 10 10")
-        .attr("refX",27)
-        .attr("refY",0)
-        .attr("markerWidth",4)
-        .attr("markerHeight",4)
-        .attr("orient","auto")
-    .append("path")
-        .attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
-        .attr("class","arrowFooter");
+	item.append("circle")
+		.attr('class','wrapper')
+		.attr("r", 20);
 
-svg.append("defs")
-    .append("marker")
-        .attr("id","arrow-start")
-        .attr("viewBox","0 -5 10 10")
-        .attr("refX",-17)
-        .attr("refY",0)
-        .attr("markerWidth",4)
-        .attr("markerHeight",4)
-        .attr("orient","auto")
-    .append("path")
-        .attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
-        .attr("class","arrowHead");
+	item.append("circle")
+		.attr('class','avatar')
+		.attr("r", 18)
+		.attr("fill", function (d) {
+			var icon;
+			if (d.avatar) {
+				//add to svg
+				addImage('user-'+d.id, d.avatar);
+				icon = 'user-'+d.id;
+			} else {
+				switch (d.type) {
+					case 0:
+						icon = 'user';
+						d.avatar = defaultUser;
+						break;
+					case 1:
+						icon = 'hospital';
+						d.avatar = defaultHospital;
+						break;
+					default:
+						icon = 'user';
+						d.avatar = defaultUser;
 
-node.append("circle")
-	.attr('class','wrapper')
-	.attr("r", 20);
-
-node.append("circle")
-	.attr('class','avatar')
-	.attr("r", 18)
-	.attr("fill", function (d) {
-		var icon;
-		if (d.avatar) {
-			//add to svg
-			addImage('user-'+d.id, d.avatar);
-			icon = 'user-'+d.id;
-		} else {
-			switch (d.type) {
-				case 0:
-					icon = 'user';
-					d.avatar = defaultUser;
-					break;
-				case 1:
-					icon = 'hospital';
-					d.avatar = defaultHospital;
-					break;
-				default:
-					icon = 'user';
-					d.avatar = defaultUser;
-
+				}
 			}
-		}
 
 
-		return 'url(#'+icon+')';
-	});
+			return 'url(#'+icon+')';
+		});
 
-node.append("text")
-	.text(function(d) { return d.name; })
-	.attr('text-anchor', 'middle')
-	.attr('x', '0')
-	.attr('y', '35');
+	item.append("text")
+		.text(function(d) { return d.name; })
+		.attr('text-anchor', 'middle')
+		.attr('x', '0')
+		.attr('y', '35');
 
+	node = nodesContainer.selectAll(".node-item")
+}
+
+function loadMore() {
+	var nodes = [].concat(graph.nodes,newData.nodes);
+	var links = [].concat(graph.links,newData.links);
+	simulation
+		.nodes(nodes);
+	graph.nodes = nodes;
+	_f.initialize(graph.nodes);
+	drawNodes();
+
+
+
+	simulation.force("link").distance(100).links(links);
+	graph.links = links;
+	drawLinks();
+
+	ticked();
+	// simulation.restart();
+
+}
 simulation
 	.nodes(graph.nodes)
 	.on("tick", ticked);
@@ -386,6 +436,11 @@ simulation.force("link")
 	})
 	.links(graph.links);
 
+_f = d3.forceCollide();
+_f.radius(60)
+	.strength(1)
+	.iterations(1)
+	.initialize(graph.nodes);
 
 function ticked() {
 	link
@@ -398,12 +453,6 @@ function ticked() {
 		.attr("transform", function (d) {
 			return 'translate(' + d.x + ',' + d.y + ')'
 		});
-
-	var _f = d3.forceCollide();
-	_f.radius(60)
-		.strength(1)
-		.iterations(10)
-		.initialize(graph.nodes);
 
 	_f();
 }
