@@ -247,10 +247,10 @@ var graph = {
 	width = document.body.clientWidth,
 	height = 800;
 
-var svg = d3.select("svg")
+var shiftKey, ctrlKey, selected,
+	svg = d3.select("svg")
 		.attr("width", width)
-		.attr("height", height),
-	shiftKey, ctrlKey, selected;
+		.attr("height", height);
 
 var defs = svg.append('svg:defs');
 
@@ -260,46 +260,52 @@ d3.select('#affiliation')
 	.on("keyup.brush", keyup)
 	.each(function() { this.focus(); });
 
-addImage('user', defaultUser);
-addImage('hospital', defaultHospital);
-defs
-	.append("marker")
-	.attr("id", "arrow-end")
-	.attr("viewBox", "0 -5 10 10")
-	.attr("refX", 27)
-	.attr("refY", 0)
-	.attr("markerWidth", 4)
-	.attr("markerHeight", 4)
-	.attr("orient", "auto")
-	.append("path")
-	.attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
-	.attr("class", "arrowFooter");
+{
+	//init images
+	addImage('user', defaultUser);
+	addImage('hospital', defaultHospital);
+	defs
+		.append("marker")
+		.attr("id", "arrow-end")
+		.attr("viewBox", "0 -5 10 10")
+		.attr("refX", 27)
+		.attr("refY", 0)
+		.attr("markerWidth", 4)
+		.attr("markerHeight", 4)
+		.attr("orient", "auto")
+		.append("path")
+		.attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
+		.attr("class", "arrowFooter");
 
-defs
-	.append("marker")
-	.attr("id", "arrow-start")
-	.attr("viewBox", "0 -5 10 10")
-	.attr("refX", -17)
-	.attr("refY", 0)
-	.attr("markerWidth", 4)
-	.attr("markerHeight", 4)
-	.attr("orient", "auto")
-	.append("path")
-	.attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
-	.attr("class", "arrowHead");
+	defs
+		.append("marker")
+		.attr("id", "arrow-start")
+		.attr("viewBox", "0 -5 10 10")
+		.attr("refX", -17)
+		.attr("refY", 0)
+		.attr("markerWidth", 4)
+		.attr("markerHeight", 4)
+		.attr("orient", "auto")
+		.append("path")
+		.attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
+		.attr("class", "arrowHead");
+}
 
 var simulation = d3.forceSimulation()
 	.force("link", d3.forceLink().id(function(d) { return d.id; }))
 	.force("charge", d3.forceManyBody())
-	.force("center", d3.forceCenter(width / 2, height / 2));
+	.force("center", d3.forceCenter(width / 2, height / 2))
+	.stop();
 
 var _f;
 
-var linksContainer = svg.append("g")
+var linksContainer, link, nodesContainer, node;
+linksContainer = svg.append("g")
 	.attr("class", "links");
-
-var link;
-drawLinks();
+nodesContainer = svg.append("g")
+	.attr("class", "nodes");
+// drawLinks();
+// drawNodes();
 
 function drawLinks() {
 	linksContainer
@@ -309,6 +315,10 @@ function drawLinks() {
 		.append('g')
 		.attr('class','link-item')
 		.append("line")
+		.attr("x1", function(d) { return d.source.x; })
+		.attr("y1", function(d) { return d.source.y; })
+		.attr("x2", function(d) { return d.target.x; })
+		.attr("y2", function(d) { return d.target.y; })
 		.attr("stroke-width", 3)
 		.attr("marker-end", "url(#arrow-end)")
 		.attr("marker-start", "url(#arrow-start)")
@@ -317,16 +327,10 @@ function drawLinks() {
 		})
 		.on("mouseout", function (e) {
 			// console.log(e);
-		});;
+		});
 
 	link = linksContainer.selectAll("line");
 }
-
-var nodesContainer = svg.append("g")
-		.attr("class", "nodes"),
-	node;
-
-drawNodes();
 
 function drawNodes() {
 	var item = nodesContainer
@@ -334,6 +338,9 @@ function drawNodes() {
 		.data(graph.nodes)
 		.enter().append('g')
 		.attr('class','node-item')
+		.attr("transform", function (d) {
+			return 'translate(' + d.x + ',' + d.y + ')'
+		})
 		/*.on('mouseover', function () {
 			event.currentTarget.parentElement.append(event.currentTarget)
 		})*/
@@ -427,8 +434,8 @@ function loadMore() {
 
 }
 simulation
-	.nodes(graph.nodes)
-	.on("tick", ticked);
+	.nodes(graph.nodes);
+	// .on("tick", ticked);
 
 simulation.force("link")
 	.distance(function () {
@@ -442,7 +449,7 @@ _f.radius(60)
 	.iterations(1)
 	.initialize(graph.nodes);
 
-function ticked() {
+/*function ticked() {
 	link
 		.attr("x1", function(d) { return d.source.x; })
 		.attr("y1", function(d) { return d.source.y; })
@@ -455,7 +462,17 @@ function ticked() {
 		});
 
 	_f();
-}
+}*/
+
+d3.timeout(function () {
+	for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
+		simulation.tick();
+		_f();
+	}
+
+	drawLinks();
+	drawNodes();
+});
 
 function addImage(id,url) {
 	defs.append('svg:pattern')
