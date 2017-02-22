@@ -415,11 +415,36 @@ function drawNodes() {
 			}
 			onChangeSelectedNode();
 			d3.select(this).classed("selected", d.selected);
+			/*if (d.selected) {
+				node.each(function (_d) {
+					delete _d.fx;
+					delete _d.fy;
+				});
+				d.fx = width / 2;
+				d.fy = height / 2;
+				simulation.stop();
+				for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
+					simulation.tick();
+					_f();
+				}
+				node.attr("transform", function (d) {
+					return 'translate(' + d.x + ',' + d.y + ')'
+				});
+				link.attr("x1", function(d) { return d.source.x; })
+					.attr("y1", function(d) { return d.source.y; })
+					.attr("x2", function(d) { return d.target.x; })
+					.attr("y2", function(d) { return d.target.y; });
+				// simulation.restart();
+			}*/
 			/*if (d.hasChildren) {
 				d.hasChildren = false;
 				loadMore();
 			}*/
-		});
+		})
+		.call(d3.drag()
+			.on("start", dragstarted)
+			.on("drag", dragged)
+			.on("end", dragended));
 
 	item.append("circle")
 		.attr('class','wrapper')
@@ -464,6 +489,22 @@ function drawNodes() {
 	node = nodesContainer.selectAll(".node-item")
 }
 
+function dragstarted(d) {
+	if (!d3.event.active) simulation.alphaTarget(0.1).restart();
+	d.fx = d.x;
+	d.fy = d.y;
+}
+
+function dragged(d) {
+	d.fx = d3.event.x;
+	d.fy = d3.event.y;
+}
+
+function dragended(d) {
+	if (!d3.event.active) simulation.alphaTarget(0);
+	// d.fx = null;
+	// d.fy = null;
+}
 function loadMore() {
 	var nodes = [].concat(graph.nodes,newData.nodes);
 	var links = [].concat(graph.links,newData.links);
@@ -484,8 +525,8 @@ function loadMore() {
 
 }
 simulation
-	.nodes(graph.nodes);
-	// .on("tick", ticked);
+	.nodes(graph.nodes)
+	.on("tick", ticked);
 
 simulation.force("link")
 	.distance(function () {
@@ -499,7 +540,7 @@ _f.radius(55)
 	.iterations(1)
 	.initialize(graph.nodes);
 
-/*function ticked() {
+function ticked() {
 	link
 		.attr("x1", function(d) { return d.source.x; })
 		.attr("y1", function(d) { return d.source.y; })
@@ -510,16 +551,17 @@ _f.radius(55)
 		.attr("transform", function (d) {
 			return 'translate(' + d.x + ',' + d.y + ')'
 		});
-
-	_f();
-}*/
+}
 
 d3.timeout(function () {
 	for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
 		simulation.tick();
 		_f();
 	}
-
+	_.forEach(simulation.nodes(), function (d) {
+		d.fx = d.x;
+		d.fy = d.y;
+	});
 	drawLinks();
 	drawNodes();
 });
