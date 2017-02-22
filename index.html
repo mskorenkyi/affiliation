@@ -9,9 +9,21 @@
             font-size: 13px;
         }
 
+        svg line.works {
+            stroke: #1846fb;
+        }
+
+        svg line.friends {
+            stroke: #fbad20;
+        }
+
         svg line:hover {
             stroke: green;
             cursor: pointer;
+        }
+
+        svg line.selected {
+            stroke: #fb5739;
         }
 
         #affiliation {
@@ -87,9 +99,9 @@
     </style>
 </head>
 <body>
-<div class="instruction">
+<!--<div class="instruction">
     Hold <b>shift key</b> for multiselect
-</div>
+</div>-->
 <div id="affiliation">
     <svg></svg>
 </div>
@@ -123,6 +135,20 @@
             <div class="row">
                 <div class="label">Email:</div>
                 <div class="value"><%= data.email %></div>
+            </div>
+        </div>
+    </div>
+</script>
+<script id="link" type="text/html">
+    <div class="node_info">
+        <div class="info">
+            <div class="row">
+                <div class="label">Type:</div>
+                <div class="value"><%= data.type %></div>
+            </div>
+            <div class="row">
+                <div class="label">Direction:</div>
+                <div class="value"><%= data.direction %></div>
             </div>
         </div>
     </div>

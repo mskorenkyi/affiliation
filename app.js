@@ -225,21 +225,21 @@ var graph = {
 			}
 		],
 		"links": [
-			{"source": "Napoleon", "target": "Myriel"},
-			{"source": "Mlle.Baptistine", "target": "Myriel"},
-			{"source": "Mme.Magloire", "target": "Myriel"},
-			{"source": "Mme.Magloire", "target": "Mlle.Baptistine"},
-			{"source": "CountessdeLo", "target": "Myriel"},
-			{"source": "Geborand", "target": "Myriel"},
-			{"source": "Dahlia", "target": "Count"},
-			{"source": "Count", "target": "Mme.deR"},
-			{"source": "Cravatte", "target": "Mme.deR"},
-			{"source": "Myriel", "target": "Mme.deR"},
-			{"source": "Napoleon", "target": "Listolier"},
-			{"source": "Napoleon", "target": "Marguerite"},
-			{"source": "Napoleon", "target": "Favourite"},
-			{"source": "Napoleon", "target": "Labarre"},
-			{"source": "Napoleon", "target": "Fameuil"}
+			{"source": "Napoleon", "target": "Myriel", "direction": "bi", "type": "works_in"},
+			{"source": "Mlle.Baptistine", "target": "Myriel", "direction": "to", "type": "works_in"},
+			{"source": "Mme.Magloire", "target": "Myriel", "direction": "to", "type": "works_in"},
+			{"source": "Mme.Magloire", "target": "Mlle.Baptistine", "direction": "none", "type": "friends_of"},
+			{"source": "CountessdeLo", "target": "Myriel", "direction": "to", "type": "works_in"},
+			{"source": "Geborand", "target": "Myriel", "direction": "to", "type": "works_in"},
+			{"source": "Dahlia", "target": "Count", "direction": "none", "type": "friends_of"},
+			{"source": "Count", "target": "Mme.deR", "direction": "none", "type": "friends_of"},
+			{"source": "Cravatte", "target": "Mme.deR", "direction": "none", "type": "friends_of"},
+			{"source": "Myriel", "target": "Mme.deR", "direction": "from", "type": "works_in"},
+			{"source": "Napoleon", "target": "Listolier", "direction": "from", "type": "works_in"},
+			{"source": "Napoleon", "target": "Marguerite", "direction": "from", "type": "works_in"},
+			{"source": "Napoleon", "target": "Favourite", "direction": "from", "type": "works_in"},
+			{"source": "Napoleon", "target": "Labarre", "direction": "from", "type": "works_in"},
+			{"source": "Napoleon", "target": "Fameuil", "direction": "from", "type": "works_in"}
 		]
 	},
 	defaultUser = 'https://cdn3.iconfinder.com/data/icons/rcons-user-action/32/boy-512.png',
@@ -320,13 +320,62 @@ function drawLinks() {
 		.attr("x2", function(d) { return d.target.x; })
 		.attr("y2", function(d) { return d.target.y; })
 		.attr("stroke-width", 3)
-		.attr("marker-end", "url(#arrow-end)")
-		.attr("marker-start", "url(#arrow-start)")
+		.attr("class", function (d) {
+			var classList = [];
+			switch (d.direction) {
+				case "from":
+					classList.push("from");
+					break;
+				case "to":
+					classList.push("to");
+					break;
+				case "bi":
+					classList.push("bi");
+					break;
+				case "none":
+					classList.push("none");
+					break;
+			}
+
+			switch (d.type) {
+				case "works_in":
+					classList.push("works");
+					break;
+				case "friends_of":
+					classList.push("friends");
+					break;
+			}
+
+			return classList.join(" ");
+
+		})
+		.attr("marker-end", function (d) {
+			return d.direction === "bi" || d.direction === "from" ? "url(#arrow-end)" : "";
+		})
+		.attr("marker-start", function (d) {
+			return d.direction === "bi" || d.direction === "to" ? "url(#arrow-start)" : "";
+		})
 		.on("mouseover", function (e) {
 			// console.log(e);
 		})
 		.on("mouseout", function (e) {
 			// console.log(e);
+		})
+		.on("click", function (d) {
+			var state = d.selected;
+
+			node.classed("selected", function(p) { return p.selected = false; });
+			link.classed("selected", function(p) { return p.selected = false; });
+
+			d.selected = !state;
+
+			selected = null;
+			if (d.selected) {
+				selected = d;
+			}
+			onChangeSelectedNode('link');
+
+			d3.select(this).classed("selected", d.selected);
 		});
 
 	link = linksContainer.selectAll("line");
@@ -348,9 +397,10 @@ function drawNodes() {
 			if (d3.event.defaultPrevented) return;
 			var state = d.selected;
 			var _selected = [];
-			if (!shiftKey) {
-				node.classed("selected", function(p) { return p.selected = false; })
-			}
+			// if (!shiftKey) {
+				node.classed("selected", function(p) { return p.selected = false; });
+				link.classed("selected", function(p) { return p.selected = false; });
+			// }
 
 			d.selected = !state;
 			node.each(function (_d) {
@@ -444,7 +494,7 @@ simulation.force("link")
 	.links(graph.links);
 
 _f = d3.forceCollide();
-_f.radius(60)
+_f.radius(55)
 	.strength(1)
 	.iterations(1)
 	.initialize(graph.nodes);
@@ -500,11 +550,22 @@ function keyup() {
 	ctrlKey = d3.event.ctrlKey;
 }
 
-function onChangeSelectedNode() {
+function onChangeSelectedNode(type) {
 	var container = document.getElementById('container');
 	var html = "";
 	if (selected) {
-		var tmpl = document.getElementById('tmpl');
+		var tmpl;
+		switch (type) {
+			case "link":
+				tmpl = document.getElementById('link');
+				break;
+			case "node":
+				tmpl = document.getElementById('tmpl');
+				break;
+			default:
+				tmpl = document.getElementById('tmpl');
+				break;
+		}
 		html = _.template(tmpl.innerHTML)({data:selected});
 	}
 	container.innerHTML = html;
