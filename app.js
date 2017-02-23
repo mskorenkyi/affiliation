@@ -247,65 +247,103 @@ var graph = {
 	width = document.body.clientWidth,
 	height = 800;
 
-var shiftKey, ctrlKey, selected,
+var linksContainer, link, nodesContainer, node,
+	shiftKey, ctrlKey, selected,
+	svg, defs, simulation, _f;
+
+function init() {
+
+	document.getElementById('affiliation')
+		.appendChild(document.createElementNS("http://www.w3.org/2000/svg", "svg"));
+
 	svg = d3.select("svg")
 		.attr("width", width)
 		.attr("height", height);
 
-var defs = svg.append('svg:defs');
+	defs = svg.append('svg:defs');
 
-d3.select('#affiliation')
-	.attr("tabindex", 1)
-	.on("keydown.brush", keydown)
-	.on("keyup.brush", keyup)
-	.each(function() { this.focus(); });
+	d3.select('#affiliation')
+		.attr("tabindex", 1)
+		.on("keydown.brush", keydown)
+		.on("keyup.brush", keyup)
+		.each(function() { this.focus(); });
 
-{
-	//init images
-	addImage('user', defaultUser);
-	addImage('hospital', defaultHospital);
-	defs
-		.append("marker")
-		.attr("id", "arrow-end")
-		.attr("viewBox", "0 -5 10 10")
-		.attr("refX", 27)
-		.attr("refY", 0)
-		.attr("markerWidth", 4)
-		.attr("markerHeight", 4)
-		.attr("orient", "auto")
-		.append("path")
-		.attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
-		.attr("class", "arrowFooter");
+	{
+		//init images
+		addImage('user', defaultUser);
+		addImage('hospital', defaultHospital);
+		defs
+			.append("marker")
+			.attr("id", "arrow-end")
+			.attr("viewBox", "0 -5 10 10")
+			.attr("refX", 27)
+			.attr("refY", 0)
+			.attr("markerWidth", 4)
+			.attr("markerHeight", 4)
+			.attr("orient", "auto")
+			.append("path")
+			.attr("d", "M0,-5L10,0L0,5") // x0 y-5, x10 y0, x0 y5
+			.attr("class", "arrowFooter");
 
-	defs
-		.append("marker")
-		.attr("id", "arrow-start")
-		.attr("viewBox", "0 -5 10 10")
-		.attr("refX", -17)
-		.attr("refY", 0)
-		.attr("markerWidth", 4)
-		.attr("markerHeight", 4)
-		.attr("orient", "auto")
-		.append("path")
-		.attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
-		.attr("class", "arrowHead");
+		defs
+			.append("marker")
+			.attr("id", "arrow-start")
+			.attr("viewBox", "0 -5 10 10")
+			.attr("refX", -17)
+			.attr("refY", 0)
+			.attr("markerWidth", 4)
+			.attr("markerHeight", 4)
+			.attr("orient", "auto")
+			.append("path")
+			.attr("d", "M0,0L10,-5L10,5") // x0 y0, x10 y-5, x10 y5
+			.attr("class", "arrowHead");
+	}
+
+	simulation = d3.forceSimulation()
+		.force("link", d3.forceLink().id(function(d) { return d.id; }))
+		.force("charge", d3.forceManyBody())
+		.force("center", d3.forceCenter(width / 2, height / 2))
+		.stop();
+
+	linksContainer = svg.append("g")
+		.attr("class", "links");
+	nodesContainer = svg.append("g")
+		.attr("class", "nodes");
+
+	simulation
+		.nodes(graph.nodes)
+		.on("tick", ticked);
+
+	simulation.force("link")
+		.distance(function () {
+			return 100;
+		})
+		.links(graph.links);
+
+	_f = d3.forceCollide();
+	_f.radius(55)
+		.strength(1)
+		.iterations(1)
+		.initialize(graph.nodes);
+
+	d3.timeout(function () {
+		for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
+			simulation.tick();
+			_f();
+		}
+		_.forEach(simulation.nodes(), function (d) {
+			d.fx = d.x;
+			d.fy = d.y;
+		});
+		drawLinks();
+		drawNodes();
+	});
 }
 
-var simulation = d3.forceSimulation()
-	.force("link", d3.forceLink().id(function(d) { return d.id; }))
-	.force("charge", d3.forceManyBody())
-	.force("center", d3.forceCenter(width / 2, height / 2))
-	.stop();
-
-var _f;
-
-var linksContainer, link, nodesContainer, node;
-linksContainer = svg.append("g")
-	.attr("class", "links");
-nodesContainer = svg.append("g")
-	.attr("class", "nodes");
-// drawLinks();
-// drawNodes();
+function redrawAffiliation() {
+	svg.remove();
+	init();
+}
 
 function drawLinks() {
 	linksContainer
@@ -386,13 +424,16 @@ function drawNodes() {
 		.selectAll(".node-item")
 		.data(graph.nodes)
 		.enter().append('g')
-		.attr('class','node-item')
+		.attr('class',function (d) {
+			var classList = 'node-item';
+			if (selected && selected.id == d.id) {
+				classList += ' selected';
+			}
+			return classList;
+		})
 		.attr("transform", function (d) {
 			return 'translate(' + d.x + ',' + d.y + ')'
 		})
-		/*.on('mouseover', function () {
-			event.currentTarget.parentElement.append(event.currentTarget)
-		})*/
 		.on('click', function (d) {
 			if (d3.event.defaultPrevented) return;
 			var state = d.selected;
@@ -415,31 +456,6 @@ function drawNodes() {
 			}
 			onChangeSelectedNode();
 			d3.select(this).classed("selected", d.selected);
-			/*if (d.selected) {
-				node.each(function (_d) {
-					delete _d.fx;
-					delete _d.fy;
-				});
-				d.fx = width / 2;
-				d.fy = height / 2;
-				simulation.stop();
-				for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
-					simulation.tick();
-					_f();
-				}
-				node.attr("transform", function (d) {
-					return 'translate(' + d.x + ',' + d.y + ')'
-				});
-				link.attr("x1", function(d) { return d.source.x; })
-					.attr("y1", function(d) { return d.source.y; })
-					.attr("x2", function(d) { return d.target.x; })
-					.attr("y2", function(d) { return d.target.y; });
-				// simulation.restart();
-			}*/
-			/*if (d.hasChildren) {
-				d.hasChildren = false;
-				loadMore();
-			}*/
 		})
 		.call(d3.drag()
 			.on("start", dragstarted)
@@ -505,6 +521,7 @@ function dragended(d) {
 	// d.fx = null;
 	// d.fy = null;
 }
+
 function loadMore() {
 	var nodes = [].concat(graph.nodes,newData.nodes);
 	var links = [].concat(graph.links,newData.links);
@@ -524,21 +541,6 @@ function loadMore() {
 	// simulation.restart();
 
 }
-simulation
-	.nodes(graph.nodes)
-	.on("tick", ticked);
-
-simulation.force("link")
-	.distance(function () {
-		return 100;
-	})
-	.links(graph.links);
-
-_f = d3.forceCollide();
-_f.radius(55)
-	.strength(1)
-	.iterations(1)
-	.initialize(graph.nodes);
 
 function ticked() {
 	link
@@ -552,19 +554,6 @@ function ticked() {
 			return 'translate(' + d.x + ',' + d.y + ')'
 		});
 }
-
-d3.timeout(function () {
-	for (var i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
-		simulation.tick();
-		_f();
-	}
-	_.forEach(simulation.nodes(), function (d) {
-		d.fx = d.x;
-		d.fy = d.y;
-	});
-	drawLinks();
-	drawNodes();
-});
 
 function addImage(id,url) {
 	defs.append('svg:pattern')
@@ -611,4 +600,20 @@ function onChangeSelectedNode(type) {
 		html = _.template(tmpl.innerHTML)({data:selected});
 	}
 	container.innerHTML = html;
+	var el = document.getElementById('doAction');
+	if (el) {
+		el.addEventListener('click', function (event) {
+			node.each(function (_d) {
+				delete _d.fx;
+				delete _d.fy;
+			});
+			selected.fx = width / 2;
+			selected.fy = height / 2;
+
+			redrawAffiliation();
+
+		}, false);
+	}
 }
+
+init();
