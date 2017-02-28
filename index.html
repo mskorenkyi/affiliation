@@ -28,10 +28,7 @@
 
         #affiliation {
             outline: 0;
-        }
-
-        .instruction {
-
+            height: 800px;
         }
 
         .links line {
@@ -53,6 +50,8 @@
         .nodes g.selected .wrapper {
             stroke: #fb5739;
         }
+
+        /*-------- popup --------*/
 
         #container {
             padding: 10px;
@@ -102,8 +101,7 @@
 <!--<div class="instruction">
     Hold <b>shift key</b> for multiselect
 </div>-->
-<div id="affiliation">
-</div>
+<div id="affiliation"></div>
 <div id="container"></div>
 
 <script id="tmpl" type="text/html">
@@ -117,16 +115,12 @@
                 <div class="label">Name:</div>
                 <div class="value"><%= data.name %></div>
             </div>
-            <%
-            if (data.age) {
-            %>
+            <% if (data.age) { %>
             <div class="row">
                 <div class="label">Age:</div>
                 <div class="value"><%= data.age %></div>
             </div>
-            <%
-            }
-            %>
+            <% } %>
             <div class="row">
                 <div class="label">Phone:</div>
                 <div class="value"><%= data.phone %></div>
@@ -135,8 +129,11 @@
                 <div class="label">Email:</div>
                 <div class="value"><%= data.email %></div>
             </div>
-            <div class="row">
-                <button id="doAction" style="float: right;">center</button>
+            <div class="row" style="padding: 5px 0;">
+                <button action="center" style="float: right;">center</button>
+                <% if (data.hasChildren) { %>
+                <button action="loadChildren" style="display: none;float: right;margin-right: 10px;">load children</button>
+                <% } %>
             </div>
         </div>
     </div>
