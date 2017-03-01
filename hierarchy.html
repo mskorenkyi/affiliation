@@ -5,6 +5,9 @@
     <title>Title</title>
 
     <style>
+        body {
+            margin: 0;
+        }
         .box {
             fill: #fff;
             stroke: black;
@@ -14,11 +17,6 @@
 
         .box.selected {
             fill: #cecece
-        }
-
-        .text {
-            font-family: arial;
-            pointer-events: none;
         }
 
         .hidden {
@@ -32,17 +30,256 @@
         .trigger:hover {
             fill: blue;
         }
+
+        .button {
+            stroke: black;
+            stroke-opacity: 0.7;
+            stroke-width: 2px;
+            fill: green;
+        }
+
+        .remove-button {
+            stroke: black;
+            stroke-opacity: 0.7;
+            stroke-width: 2px;
+            fill: red;
+        }
+
+        .modal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 99;
+        }
+
+        .modal-in {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 400px;
+            height: 380px;
+            background-color: #fff;
+            padding: 15px;
+            font-family: Arial;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+        }
+        .modal-in h2 {
+            margin-top: 0;
+        }
+
+        .text {
+            position: absolute;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            font-family: arial;
+            pointer-events: none;
+            font-size: 14px;
+        }
+
+        svg body {
+            pointer-events: none;
+            background: none;
+        }
+
+        .loading {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            color: #fff;
+            font-family: arial;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 99;
+        }
+        .loading .loading-in {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            text-align: center;
+            height: 20px;
+        }
     </style>
 </head>
 <body>
 
+
+
 <div id="hierarchy">
+    <div class="modal hidden">
+        <div class="modal-in">
+            <form id="modal-form">
+                <input type="hidden" id="parentId"/>
+                <h2>New node</h2>
+                Label:
+                <input class="form-control" type="text" id="label"/>
+                <br/>
+
+                Topic type: <br/>
+                <select id="topic" class="form-control">
+                    <option value="Brand">Brand</option>
+                    <option value="Therapeutic area">Therapeutic area</option>
+                </select>
+                <br/>
+
+                Brand or Th Area:<br/>
+                <select id="topic2" class="form-control"></select>
+                <br/>
+
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-secondary" type="reset">Cancel</button>
+            </form>
+        </div>
+    </div>
 
 </div>
 
-<script src="./d3.v4.js"></script>
+
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
 <script src="hierarchy.js"></script>
+<script>
+    var table = [
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akVuUAI",
+            "parentId": null,
+            "name": "Topic 1",
+            "modifiedDate": "2017-02-23T15:55:32.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T15:55:32.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akW9UAI",
+            "parentId": "a0N0Y000000akVzUAI",
+            "name": "Topic 111",
+            "modifiedDate": "2017-02-23T15:58:37.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T15:58:37.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akWYUAY",
+            "parentId": "a0N0Y000000akWTUAY",
+            "name": "Topic 11221",
+            "modifiedDate": "2017-02-23T16:03:58.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T16:03:58.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akVzUAI",
+            "parentId": "a0N0Y000000akVuUAI",
+            "name": "Topic 11",
+            "modifiedDate": "2017-02-23T15:56:31.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T15:56:31.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Therapeutic area",
+            "recordId": "a0N0Y000000akWEUAY",
+            "parentId": "a0N0Y000000akVzUAI",
+            "name": "Topic 112",
+            "modifiedDate": "2017-02-23T15:59:43.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T15:59:43.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akWJUAY",
+            "parentId": "a0N0Y000000akW4UAI",
+            "name": "Topic 121",
+            "modifiedDate": "2017-02-23T16:00:35.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T16:00:35.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akWOUAY",
+            "parentId": "a0N0Y000000akWEUAY",
+            "name": "Topic 1121",
+            "modifiedDate": "2017-02-23T16:01:31.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T16:01:31.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Therapeutic area",
+            "recordId": "a0N0Y000000akWTUAY",
+            "parentId": "a0N0Y000000akWEUAY",
+            "name": "Topic 1122",
+            "modifiedDate": "2017-02-23T16:02:26.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T16:02:26.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Brand",
+            "recordId": "a0N0Y000000akWdUAI",
+            "parentId": "a0N0Y000000akWTUAY",
+            "name": "Topic 11222",
+            "modifiedDate": "2017-02-23T16:04:31.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T16:04:31.000Z",
+            "brandId": null
+        },
+        {
+            "topicType": "Therapeutic area",
+            "recordId": "a0N0Y000000akW4UAI",
+            "parentId": "a0N0Y000000akVuUAI",
+            "name": "Topic 12",
+            "modifiedDate": "2017-02-23T15:56:58.000Z",
+            "mcPublicationListId": null,
+            "description": null,
+            "createdDate": "2017-02-23T15:56:58.000Z",
+            "brandId": null
+        }
+    ];
+
+    d3.imsHierarchy({
+        blockId: 'hierarchy',
+        data: table,
+        offsetY: 50,
+        boxHeight: 45,
+        boxWidth: 90,
+        toggleable: true,
+        endPoints: {
+            create: '{!$RemoteAction.TopicHierarchiesController.createTopic}',
+            delete: '{!$RemoteAction.TopicHierarchiesController.deleteTopic}'
+        }
+//        vertical: false
+    });
+</script>
 </body>
 </html>
